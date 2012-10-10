@@ -1,0 +1,9 @@
+A simple calculate lib
+
+support * / + - ( )
+
+func fn(key string) float32 {
+     ...
+}
+
+rst, err := cal.Cal("a-b/c+d*(a-d)", fn)
