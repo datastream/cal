@@ -4,8 +4,8 @@ import (
 	"errors"
 )
 
-func Cal(exp string, fn func(string) float32) (float32, error) {
-	exps := parser(exp)
+func Cal(exp string, k_v map[string]float32) (float32, error) {
+	exps := Parser(exp)
 	var opstack []string
 	var calstack []float32
 	for i := range exps {
@@ -69,7 +69,7 @@ func Cal(exp string, fn func(string) float32) (float32, error) {
 			}
 		default:
 			{
-				calstack = append(calstack, fn(exps[i]))
+				calstack = append(calstack, k_v[exps[i]])
 			}
 		}
 	}
@@ -149,7 +149,7 @@ func check_peroption(opstack []string, op string) bool {
 	}
 	return false
 }
-func parser(exp string) []string {
+func Parser(exp string) []string {
 	var tokens []string
 	var token []byte
 	for i := range exp {

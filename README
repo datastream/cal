@@ -2,8 +2,5 @@ A simple calculate lib
 
 support * / + - ( )
 
-func fn(key string) float32 {
-     ...
-}
-
-rst, err := cal.Cal("a-b/c+d*(a-d)", fn)
+k_v := map[string]float{"a":2,"b":3,"c":4,"d":5}
+rst, err := cal.Cal("a-b/c+d*(a-d)", k_v)
