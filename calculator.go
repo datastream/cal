@@ -73,7 +73,7 @@ func Cal(exp string, k_v map[string]float32) (float32, error) {
 				if ok {
 					calstack = append(calstack, value)
 				} else {
-					return 0, nil
+					return 0, error.New("miss value of " + exps[i])
 				}
 			}
 		}
