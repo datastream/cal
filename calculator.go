@@ -69,7 +69,12 @@ func Cal(exp string, k_v map[string]float32) (float32, error) {
 			}
 		default:
 			{
-				calstack = append(calstack, k_v[exps[i]])
+				value, ok := k_v[exps[i]]
+				if ok {
+					calstack = append(calstack, value)
+				} else {
+					return 0, nil
+				}
 			}
 		}
 	}
