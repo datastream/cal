@@ -4,10 +4,10 @@ import (
 	"errors"
 )
 
-func Cal(exp string, k_v map[string]float32) (float32, error) {
+func Cal(exp string, k_v map[string]interface{}) (float64, error) {
 	exps := Parser(exp)
 	var opstack []string
-	var calstack []float32
+	var calstack []float64
 	for i := range exps {
 		switch exps[i] {
 		case "-":
@@ -69,8 +69,9 @@ func Cal(exp string, k_v map[string]float32) (float32, error) {
 			}
 		default:
 			{
-				value, ok := k_v[exps[i]]
+				v, ok := k_v[exps[i]]
 				if ok {
+					value := get_value(v)
 					calstack = append(calstack, value)
 				} else {
 					return 0, errors.New("miss value of " + exps[i])
@@ -100,14 +101,74 @@ func Cal(exp string, k_v map[string]float32) (float32, error) {
 	return calstack[len(calstack)-1], nil
 }
 
-func cal2(calstack []float32, op string) (float32, error) {
-	var exp1 float32
-	var exp2 float32
+func get_value(v interface{}) float64 {
+	var value float64
+	switch v.(type) {
+	case int:
+		{
+			d, _ := v.(int)
+			value = float64(d)
+		}
+	case int8:
+		{
+			d, _ := v.(int8)
+			value = float64(d)
+		}
+	case int16:
+		{
+			d, _ := v.(int16)
+			value = float64(d)
+		}
+	case int32:
+		{
+			d, _ := v.(int32)
+			value = float64(d)
+		}
+	case int64:
+		{
+			d, _ := v.(int64)
+			value = float64(d)
+		}
+	case uint8:
+		{
+			d, _ := v.(uint8)
+			value = float64(d)
+		}
+	case uint16:
+		{
+			d, _ := v.(uint16)
+			value = float64(d)
+		}
+	case uint32:
+		{
+			d, _ := v.(uint32)
+			value = float64(d)
+		}
+	case uint64:
+		{
+			d, _ := v.(uint64)
+			value = float64(d)
+		}
+	case float64:
+		{
+			value, _ = v.(float64)
+		}
+	case float32:
+		{
+			d, _ := v.(float32)
+			value = float64(d)
+		}
+	}
+	return value
+}
+func cal2(calstack []float64, op string) (float64, error) {
+	var exp1 float64
+	var exp2 float64
 	switch len(calstack) {
 	case 1:
 		{
 			exp1 = 0
-			exp2 = calstack[len(calstack) -1]
+			exp2 = calstack[len(calstack)-1]
 		}
 	case 0:
 		{
@@ -116,39 +177,39 @@ func cal2(calstack []float32, op string) (float32, error) {
 		}
 	default:
 		{
-			exp1 = calstack[len(calstack) -2]
-			exp2 = calstack[len(calstack) -1]
+			exp1 = calstack[len(calstack)-2]
+			exp2 = calstack[len(calstack)-1]
 		}
 	}
 	switch op {
 	case "+":
 		{
-			return exp1+exp2, nil
+			return exp1 + exp2, nil
 		}
 	case "-":
 		{
-			return exp1-exp2, nil
+			return exp1 - exp2, nil
 		}
 	case "*":
 		{
-			return exp1*exp2, nil
+			return exp1 * exp2, nil
 		}
 	case "/":
 		{
 			if exp2 == 0 {
 				return 0, errors.New("Div by zero")
 			}
-			return exp1/exp2, nil
+			return exp1 / exp2, nil
 		}
 	}
 	return 0, nil
 }
 func check_peroption(opstack []string, op string) bool {
 	if len(opstack) > 0 {
-		if (opstack[len(opstack)-1] == "-" || opstack[len(opstack)-1] == "+" || opstack[len(opstack)-1] == "*" || opstack[len(opstack)-1] == "/") && (op == "-"|| op == "+") {
+		if (opstack[len(opstack)-1] == "-" || opstack[len(opstack)-1] == "+" || opstack[len(opstack)-1] == "*" || opstack[len(opstack)-1] == "/") && (op == "-" || op == "+") {
 			return true
 		}
-		if (opstack[len(opstack)-1] == "*" || opstack[len(opstack)-1] == "/") && (op == "*"|| op == "/") {
+		if (opstack[len(opstack)-1] == "*" || opstack[len(opstack)-1] == "/") && (op == "*" || op == "/") {
 			return true
 		}
 	}
@@ -187,7 +248,8 @@ func Parser(exp string) []string {
 				}
 				tokens = append(tokens, string([]byte{exp[i]}))
 			}
-		case ' ': {
+		case ' ':
+			{
 			}
 		default:
 			{
