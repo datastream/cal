@@ -257,5 +257,8 @@ func Parser(exp string) []string {
 			}
 		}
 	}
+	if len(token) > 0{
+		tokens = append(tokens, string(token))
+	}
 	return tokens
 }
