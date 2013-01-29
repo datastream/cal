@@ -26,7 +26,8 @@ func Cal(exp string, k_v map[string]interface{}) (float64, error) {
 			{
 				for {
 					if check_peroption(opstack, exps[i]) {
-						rst, err := cal2(calstack, opstack[len(opstack)-1])
+						rst, err := cal2(calstack,
+							opstack[len(opstack)-1])
 						if err != nil {
 							return 0, err
 						}
@@ -54,7 +55,8 @@ func Cal(exp string, k_v map[string]interface{}) (float64, error) {
 						opstack = opstack[:len(opstack)-1]
 						break
 					}
-					rst, err := cal2(calstack, opstack[len(opstack)-1])
+					rst, err := cal2(calstack,
+						opstack[len(opstack)-1])
 					if err != nil {
 						return 0, err
 					}
@@ -206,10 +208,16 @@ func cal2(calstack []float64, op string) (float64, error) {
 }
 func check_peroption(opstack []string, op string) bool {
 	if len(opstack) > 0 {
-		if (opstack[len(opstack)-1] == "-" || opstack[len(opstack)-1] == "+" || opstack[len(opstack)-1] == "*" || opstack[len(opstack)-1] == "/") && (op == "-" || op == "+") {
+		if (opstack[len(opstack)-1] == "-" ||
+			opstack[len(opstack)-1] == "+" ||
+			opstack[len(opstack)-1] == "*" ||
+			opstack[len(opstack)-1] == "/") &&
+			(op == "-" || op == "+") {
 			return true
 		}
-		if (opstack[len(opstack)-1] == "*" || opstack[len(opstack)-1] == "/") && (op == "*" || op == "/") {
+		if (opstack[len(opstack)-1] == "*" ||
+			opstack[len(opstack)-1] == "/") &&
+			(op == "*" || op == "/") {
 			return true
 		}
 	}
@@ -257,7 +265,7 @@ func Parser(exp string) []string {
 			}
 		}
 	}
-	if len(token) > 0{
+	if len(token) > 0 {
 		tokens = append(tokens, string(token))
 	}
 	return tokens
