@@ -8,24 +8,18 @@ func Cal(exp string, k_v map[string]interface{}) (float64, error) {
 	exps := Parser(exp)
 	var opstack []string
 	var calstack []float64
-	for i := range exps {
-		switch exps[i] {
+	for _, item := range exps {
+		switch item {
 		case "-":
-			{
-				fallthrough
-			}
+			fallthrough
 		case "+":
-			{
-				fallthrough
-			}
+			fallthrough
 		case "/":
-			{
-				fallthrough
-			}
+			fallthrough
 		case "*":
 			{
 				for {
-					if check_peroption(opstack, exps[i]) {
+					if check_peroption(opstack, item) {
 						rst, err := cal2(calstack,
 							opstack[len(opstack)-1])
 						if err != nil {
@@ -42,11 +36,11 @@ func Cal(exp string, k_v map[string]interface{}) (float64, error) {
 						break
 					}
 				}
-				opstack = append(opstack, exps[i])
+				opstack = append(opstack, item)
 			}
 		case "(":
 			{
-				opstack = append(opstack, exps[i])
+				opstack = append(opstack, item)
 			}
 		case ")":
 			{
@@ -71,12 +65,12 @@ func Cal(exp string, k_v map[string]interface{}) (float64, error) {
 			}
 		default:
 			{
-				v, ok := k_v[exps[i]]
+				v, ok := k_v[item]
 				if ok {
 					value := get_value(v)
 					calstack = append(calstack, value)
 				} else {
-					return 0, errors.New("miss value of " + exps[i])
+					return 0, errors.New("miss value of " + item)
 				}
 			}
 		}
@@ -99,6 +93,9 @@ func Cal(exp string, k_v map[string]interface{}) (float64, error) {
 	}
 	if len(calstack) > 1 {
 		return calstack[0], errors.New("error exp")
+	}
+	if len(calstack) == 0 {
+		return 0, errors.New("nothing to calculate")
 	}
 	return calstack[len(calstack)-1], nil
 }
@@ -229,25 +226,15 @@ func Parser(exp string) []string {
 	for i := range exp {
 		switch exp[i] {
 		case '*':
-			{
-				fallthrough
-			}
+			fallthrough
 		case '/':
-			{
-				fallthrough
-			}
+			fallthrough
 		case '-':
-			{
-				fallthrough
-			}
+			fallthrough
 		case '+':
-			{
-				fallthrough
-			}
+			fallthrough
 		case '(':
-			{
-				fallthrough
-			}
+			fallthrough
 		case ')':
 			{
 				if len(token) > 0 {
