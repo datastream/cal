@@ -2,13 +2,16 @@ package cal
 
 import (
 	"errors"
+	"strconv"
+	"strings"
+	"text/scanner"
 )
 
-func Cal(exp string, k_v map[string]interface{}) (float64, error) {
-	exps := Parser(exp)
+func Cal(s string, vars map[string]interface{}) (float64, error) {
+	items := Parser(s)
 	var opstack []string
 	var calstack []float64
-	for _, item := range exps {
+	for _, item := range items {
 		switch item {
 		case "-":
 			fallthrough
@@ -19,7 +22,7 @@ func Cal(exp string, k_v map[string]interface{}) (float64, error) {
 		case "*":
 			{
 				for {
-					if check_peroption(opstack, item) {
+					if checkPeroption(opstack, item) {
 						rst, err := cal2(calstack,
 							opstack[len(opstack)-1])
 						if err != nil {
@@ -65,11 +68,16 @@ func Cal(exp string, k_v map[string]interface{}) (float64, error) {
 			}
 		default:
 			{
-				v, ok := k_v[item]
+				v, ok := vars[item]
 				if ok {
-					value := get_value(v)
+					value := getValue(v)
 					calstack = append(calstack, value)
 				} else {
+					value, err := strconv.ParseFloat(item, 64)
+					if err == nil {
+						calstack = append(calstack, value)
+						continue
+					}
 					return 0, errors.New("miss value of " + item)
 				}
 			}
@@ -100,7 +108,7 @@ func Cal(exp string, k_v map[string]interface{}) (float64, error) {
 	return calstack[len(calstack)-1], nil
 }
 
-func get_value(v interface{}) float64 {
+func getValue(v interface{}) float64 {
 	var value float64
 	switch v.(type) {
 	case int:
@@ -203,7 +211,7 @@ func cal2(calstack []float64, op string) (float64, error) {
 	}
 	return 0, nil
 }
-func check_peroption(opstack []string, op string) bool {
+func checkPeroption(opstack []string, op string) bool {
 	if len(opstack) > 0 {
 		if (opstack[len(opstack)-1] == "-" ||
 			opstack[len(opstack)-1] == "+" ||
@@ -220,40 +228,16 @@ func check_peroption(opstack []string, op string) bool {
 	}
 	return false
 }
-func Parser(exp string) []string {
-	var tokens []string
-	var token []byte
-	for i := range exp {
-		switch exp[i] {
-		case '*':
-			fallthrough
-		case '/':
-			fallthrough
-		case '-':
-			fallthrough
-		case '+':
-			fallthrough
-		case '(':
-			fallthrough
-		case ')':
-			{
-				if len(token) > 0 {
-					tokens = append(tokens, string(token))
-					token = token[:0]
-				}
-				tokens = append(tokens, string([]byte{exp[i]}))
-			}
-		case ' ':
-			{
-			}
-		default:
-			{
-				token = append(token, exp[i])
-			}
+func Parser(s string) []string {
+	var items []string
+	var sc scanner.Scanner
+	sc.Init(strings.NewReader(s))
+	var tok rune
+	for tok != scanner.EOF {
+		tok = sc.Scan()
+		if tok != scanner.EOF {
+			items = append(items, sc.TokenText())
 		}
 	}
-	if len(token) > 0 {
-		tokens = append(tokens, string(token))
-	}
-	return tokens
+	return items
 }
