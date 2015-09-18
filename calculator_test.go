@@ -14,4 +14,74 @@ func TestCal(t *testing.T) {
 	} else {
 		t.Log(rst)
 	}
+	exp = "a>b"
+	rst, err = cal.Cal(exp, k_v)
+	if err != nil || rst == 1 {
+		t.Fatal(err, rst)
+	} else {
+		t.Log(rst)
+	}
+	exp = "a>=b"
+	rst, err = cal.Cal(exp, k_v)
+	if err != nil || rst == 1 {
+		t.Fatal(err, rst)
+	} else {
+		t.Log(rst)
+	}
+	exp = "a<b"
+	rst, err = cal.Cal(exp, k_v)
+	if err != nil || rst == 0 {
+		t.Fatal(err, rst)
+	} else {
+		t.Log(rst)
+	}
+	exp = "a<=b"
+	rst, err = cal.Cal(exp, k_v)
+	if err != nil || rst == 0 {
+		t.Fatal(err, rst)
+	} else {
+		t.Log(rst)
+	}
+	exp = "a!=b"
+	rst, err = cal.Cal(exp, k_v)
+	if err != nil || rst == 0 {
+		t.Fatal(err, rst)
+	} else {
+		t.Log(rst)
+	}
+	exp = "a==b"
+	rst, err = cal.Cal(exp, k_v)
+	if err != nil || rst == 1 {
+		t.Fatal(err, rst)
+	} else {
+		t.Log(rst)
+	}
+	exp = "0||1"
+	rst, err = cal.Cal(exp, k_v)
+	if err != nil || rst == 0 {
+		t.Fatal(err, rst)
+	} else {
+		t.Log(rst)
+	}
+	exp = "1||1"
+	rst, err = cal.Cal(exp, k_v)
+	if err != nil || rst == 0 {
+		t.Fatal(err, rst)
+	} else {
+		t.Log(rst)
+	}
+	exp = "1&&1"
+	rst, err = cal.Cal(exp, k_v)
+	if err != nil || rst == 0 {
+		t.Fatal(err, rst)
+	} else {
+		t.Log(rst)
+	}
+	exp = "1&&0"
+	rst, err = cal.Cal(exp, k_v)
+	if err != nil || rst == 1 {
+		t.Fatal(err, rst)
+	} else {
+		t.Log(rst)
+	}
 }

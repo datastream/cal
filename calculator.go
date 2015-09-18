@@ -2,6 +2,7 @@ package cal
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 	"text/scanner"
@@ -18,6 +19,22 @@ func Cal(s string, vars map[string]interface{}) (float64, error) {
 		case "+":
 			fallthrough
 		case "/":
+			fallthrough
+		case "||":
+			fallthrough
+		case "&&":
+			fallthrough
+		case "!=":
+			fallthrough
+		case ">":
+			fallthrough
+		case ">=":
+			fallthrough
+		case "<":
+			fallthrough
+		case "<=":
+			fallthrough
+		case "==":
 			fallthrough
 		case "*":
 			{
@@ -189,6 +206,70 @@ func cal2(calstack []float64, op string) (float64, error) {
 		}
 	}
 	switch op {
+	case "||":
+		{
+			if (exp1 > 0) || (exp2 > 0) {
+				return 1, nil
+			} else {
+				return 0, nil
+			}
+		}
+	case "&&":
+		{
+			if (exp1 > 0) && (exp2 > 0) {
+				return 1, nil
+			} else {
+				return 0, nil
+			}
+		}
+	case "==":
+		{
+			if exp1 == exp2 {
+				return 1, nil
+			} else {
+				return 0, nil
+			}
+		}
+	case ">=":
+		{
+			if exp1 >= exp2 {
+				return 1, nil
+			} else {
+				return 0, nil
+			}
+		}
+	case "<=":
+		{
+			if exp1 <= exp2 {
+				return 1, nil
+			} else {
+				return 0, nil
+			}
+		}
+	case "!=":
+		{
+			if exp1 != exp2 {
+				return 1, nil
+			} else {
+				return 0, nil
+			}
+		}
+	case ">":
+		{
+			if exp1 > exp2 {
+				return 1, nil
+			} else {
+				return 0, nil
+			}
+		}
+	case "<":
+		{
+			if exp1 < exp2 {
+				return 1, nil
+			} else {
+				return 0, nil
+			}
+		}
 	case "+":
 		{
 			return exp1 + exp2, nil
@@ -212,17 +293,18 @@ func cal2(calstack []float64, op string) (float64, error) {
 	return 0, nil
 }
 func checkPeroption(opstack []string, op string) bool {
-	if len(opstack) > 0 {
-		if (opstack[len(opstack)-1] == "-" ||
-			opstack[len(opstack)-1] == "+" ||
-			opstack[len(opstack)-1] == "*" ||
-			opstack[len(opstack)-1] == "/") &&
-			(op == "-" || op == "+") {
+	i := len(opstack)
+	if i > 0 {
+		if (opstack[i-1] == "-" || opstack[i-1] == "+" || opstack[i-1] == "*" || opstack[i-1] == "/") && (op == "-" || op == "+") {
 			return true
 		}
-		if (opstack[len(opstack)-1] == "*" ||
-			opstack[len(opstack)-1] == "/") &&
-			(op == "*" || op == "/") {
+		if (opstack[i-1] == "*" || opstack[i-1] == "/") && (op == "*" || op == "/") {
+			return true
+		}
+		if (opstack[i-1] == "==" || opstack[i-1] == "!=" || opstack[i-1] == ">=" || opstack[i-1] == "<=" || opstack[i-1] == "<" || opstack[i-1] == ">" || opstack[i-1] == "-" || opstack[i-1] == "+" || opstack[i-1] == "*" || opstack[i-1] == "/" || opstack[i-1] == "-" || opstack[i-1] == "+" || opstack[i-1] == "*" || opstack[i-1] == "/") && (op == "==" || op == "!=" || op == ">=" || op == "<=" || op == ">" || op == "<") {
+			return true
+		}
+		if (opstack[i-1] == "==" || opstack[i-1] == "!=" || opstack[i-1] == ">=" || opstack[i-1] == "<=" || opstack[i-1] == "<" || opstack[i-1] == ">" || opstack[i-1] == "-" || opstack[i-1] == "+" || opstack[i-1] == "*" || opstack[i-1] == "/" || opstack[i-1] == "-" || opstack[i-1] == "+" || opstack[i-1] == "*" || opstack[i-1] == "/" || opstack[i-1] == "&&" || opstack[i-1] == "||") && (op == "&&" || op == "||") {
 			return true
 		}
 	}
@@ -235,8 +317,24 @@ func Parser(s string) []string {
 	var tok rune
 	for tok != scanner.EOF {
 		tok = sc.Scan()
+		item := sc.TokenText()
 		if tok != scanner.EOF {
-			items = append(items, sc.TokenText())
+			i := len(items)
+			if i > 0 {
+				if item == "=" && (items[i-1] == "!" || items[i-1] == ">" || items[i-1] == "<" || items[i-1] == "=") {
+					items[i-1] = fmt.Sprintf("%s%s", items[i-1], item)
+					continue
+				}
+				if item == "|" && (items[i-1]) == "|" {
+					items[i-1] = fmt.Sprintf("%s%s", items[i-1], item)
+					continue
+				}
+				if item == "&" && (items[i-1]) == "&" {
+					items[i-1] = fmt.Sprintf("%s%s", items[i-1], item)
+					continue
+				}
+			}
+			items = append(items, item)
 		}
 	}
 	return items
