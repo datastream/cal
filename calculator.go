@@ -301,10 +301,10 @@ func checkPeroption(opstack []string, op string) bool {
 		if (opstack[i-1] == "*" || opstack[i-1] == "/") && (op == "*" || op == "/") {
 			return true
 		}
-		if (opstack[i-1] == "==" || opstack[i-1] == "!=" || opstack[i-1] == ">=" || opstack[i-1] == "<=" || opstack[i-1] == "<" || opstack[i-1] == ">" || opstack[i-1] == "-" || opstack[i-1] == "+" || opstack[i-1] == "*" || opstack[i-1] == "/" || opstack[i-1] == "-" || opstack[i-1] == "+" || opstack[i-1] == "*" || opstack[i-1] == "/") && (op == "==" || op == "!=" || op == ">=" || op == "<=" || op == ">" || op == "<") {
+		if (opstack[i-1] == "==" || opstack[i-1] == "!=" || opstack[i-1] == ">=" || opstack[i-1] == "<=" || opstack[i-1] == "<" || opstack[i-1] == ">" || opstack[i-1] == "-" || opstack[i-1] == "+" || opstack[i-1] == "*" || opstack[i-1] == "/") && (op == "==" || op == "!=" || op == ">=" || op == "<=" || op == ">" || op == "<") {
 			return true
 		}
-		if (opstack[i-1] == "==" || opstack[i-1] == "!=" || opstack[i-1] == ">=" || opstack[i-1] == "<=" || opstack[i-1] == "<" || opstack[i-1] == ">" || opstack[i-1] == "-" || opstack[i-1] == "+" || opstack[i-1] == "*" || opstack[i-1] == "/" || opstack[i-1] == "-" || opstack[i-1] == "+" || opstack[i-1] == "*" || opstack[i-1] == "/" || opstack[i-1] == "&&" || opstack[i-1] == "||") && (op == "&&" || op == "||") {
+		if (opstack[i-1] == "==" || opstack[i-1] == "!=" || opstack[i-1] == ">=" || opstack[i-1] == "<=" || opstack[i-1] == "<" || opstack[i-1] == ">" || opstack[i-1] == "-" || opstack[i-1] == "+" || opstack[i-1] == "*" || opstack[i-1] == "/" || opstack[i-1] == "&&" || opstack[i-1] == "||") && (op == "&&" || op == "||") {
 			return true
 		}
 	}
